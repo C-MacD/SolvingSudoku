@@ -1,9 +1,8 @@
-public class NumberSquare {
-	private int value;
-	private int possibleValues[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-	private Coordinates cords;
+import java.util.ArrayList;
 
-	// Priority? Increase every time a possible value is eliminated?
+public class NumberSquare {
+	private ArrayList<Integer> possibleValues = new ArrayList<Integer>();
+	private Coordinates cords;
 
 	/**
 	 * Constructor when value is given.
@@ -15,8 +14,9 @@ public class NumberSquare {
 	public NumberSquare(int xCord, int yCord, int value) {
 		super();
 		cords = new Coordinates(xCord, yCord);
-		this.value = value;
-		this.possibleValues = new int[] { value };
+		if (value != -1) {
+			this.possibleValues.add(value);
+		}
 	}
 
 	/**
@@ -27,45 +27,54 @@ public class NumberSquare {
 	 */
 	public NumberSquare(int xCord, int yCord) {
 		this(xCord, yCord, -1);
+		for (int i = 1; i <= 9; i++) {
+			possibleValues.add(i);
+		}
 	}
 
 	public int getValue() {
-		return this.value;
+		if (possibleValues.size() == 1) {
+			return possibleValues.get(0);
+		} else {
+			return -1;
+		}
 	}
 
 	public void setValue(int value) {
-		this.value = value;
+		possibleValues.clear();
+		possibleValues.add(value);
 	}
 
-	public int[] getPossibleValues() {
+	public ArrayList<Integer> getPossibleValues() {
 		return this.possibleValues;
 	}
 
-	public void removePossibleValue(int value) {
-		// TODO
+	public void removePossibleValue(Integer value) {
+		possibleValues.remove(value);
 	}
 
 	public Coordinates getCords() {
 		return this.cords;
 	}
 
+	public Coordinates getSubSquare() {
+		/*
+		 * 1-3 becomes 1.
+		 * 4-6 becomes 2.
+		 * 7-9 becomes 3.
+		 */
+		int x = (int) ((cords.getXCord() - 1) / 3) + 1;
+		int y = (int) ((cords.getYCord() - 1) / 3) + 1;
+
+		return new Coordinates(x, y);
+	}
+
 }
 
 /**
  * Keeps track of x and y coordinates of a square within the 9x9 board. X
- * increases to the right, y increases going down.
+ * increases to the right, y increases going down, starts at 1.
  * 
- * . 1 2 3 4 5 6 7 8 9
- * 1 □ □ □ □ □ □ □ □ □
- * 2 □ □ □ □ □ □ □ □ □
- * 3 □ □ □ □ □ □ □ □ □
- * 4 □ □ □ □ □ □ □ □ □
- * 5 □ □ □ □ □ □ □ □ □
- * 6 □ □ □ □ □ □ □ □ □
- * 7 □ □ □ □ □ □ □ □ □
- * 8 □ □ □ □ □ □ □ □ □
- * 9 □ □ □ □ □ □ □ □ □
- *
  */
 class Coordinates {
 	private int xCord;
