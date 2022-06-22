@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 public class SudokuBoard {
-	ArrayList<NumberSquare> sudokuBoard = new ArrayList<NumberSquare>();
+	private static ArrayList<NumberSquare> sudokuBoard = new ArrayList<NumberSquare>();
 
 	/*
 	 * . 1 2 3 4 5 6 7 8 9
@@ -55,7 +55,17 @@ public class SudokuBoard {
 
 	}
 
-	void insertToBoard(NumberSquare numberSquare) {
-		this.sudokuBoard.add(numberSquare);
+	static void insertToBoard(NumberSquare numberSquare) {
+		sudokuBoard.add(numberSquare);
+	}
+
+	static NumberSquare findSquare(Coordinates cords) {
+		for (NumberSquare numberSquare : sudokuBoard) {
+			if (numberSquare.getCords().getXCord() == cords.getXCord() &&
+					numberSquare.getCords().getYCord() == cords.getYCord()) {
+				return numberSquare;
+			}
+		}
+		return null; // Should never return this
 	}
 }

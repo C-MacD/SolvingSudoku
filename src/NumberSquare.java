@@ -43,6 +43,7 @@ public class NumberSquare {
 	public void setValue(int value) {
 		possibleValues.clear();
 		possibleValues.add(value);
+		// TODO: check neighbors
 	}
 
 	public ArrayList<Integer> getPossibleValues() {
