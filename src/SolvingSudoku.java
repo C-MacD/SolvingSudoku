@@ -6,5 +6,7 @@ public class SolvingSudoku {
 
         SudokuFile sudokuFile = new SudokuFile();
         sudokuFile.importBoard();
+
+        SudokuBoard.printBoard();
     }
 }

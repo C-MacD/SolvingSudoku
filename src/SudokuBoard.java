@@ -39,7 +39,7 @@ public class SudokuBoard {
 	 * @param cords
 	 * @param value
 	 */
-	void updateNeighbors(NumberSquare solvedSquare) {
+	static void updateNeighbors(NumberSquare solvedSquare) {
 		for (NumberSquare currentSquare : sudokuBoard) {
 			boolean isItself = currentSquare.equals(solvedSquare);
 			// In same row, column, or subsquare
@@ -49,7 +49,6 @@ public class SudokuBoard {
 
 			if (!isItself && isNeighbor) {
 				currentSquare.removePossibleValue(solvedSquare.getValue());
-				// TODO: check others for completeness
 			}
 		}
 
@@ -67,5 +66,18 @@ public class SudokuBoard {
 			}
 		}
 		return null; // Should never return this
+	}
+
+	static void printBoard() {
+		// For each board row
+		for (int i = 1; i <= 9; i++) {
+			// For each number square
+			for (int j = 1; j <= 9; j++) {
+				NumberSquare numSquare = SudokuBoard.findSquare(new Coordinates(i, j));
+				// System.out.print(numSquare.getValue());
+				System.out.println(numSquare.getPossibleValues().toString());
+			}
+			System.out.println();
+		}
 	}
 }

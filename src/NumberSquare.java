@@ -3,6 +3,7 @@ import java.util.ArrayList;
 public class NumberSquare {
 	private ArrayList<Integer> possibleValues = new ArrayList<Integer>();
 	private Coordinates cords;
+	private boolean usedSolution = false;
 
 	/**
 	 * Constructor when value is given.
@@ -43,7 +44,11 @@ public class NumberSquare {
 	public void setValue(int value) {
 		possibleValues.clear();
 		possibleValues.add(value);
-		// TODO: check neighbors
+
+		if (!usedSolution) {
+			SudokuBoard.updateNeighbors(this);
+			usedSolution = true;
+		}
 	}
 
 	public ArrayList<Integer> getPossibleValues() {
@@ -52,6 +57,9 @@ public class NumberSquare {
 
 	public void removePossibleValue(Integer value) {
 		possibleValues.remove(value);
+		if (possibleValues.size() == 1) {
+			setValue(possibleValues.get(0));
+		}
 	}
 
 	public Coordinates getCords() {
