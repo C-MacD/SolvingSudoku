@@ -4,6 +4,7 @@ public class NumberSquare {
 	private ArrayList<Integer> possibleValues = new ArrayList<Integer>();
 	private Coordinates cords;
 	private boolean usedSolution = false;
+	private int temporaryValue = -1;
 
 	/**
 	 * Constructor when value is given.
@@ -37,7 +38,7 @@ public class NumberSquare {
 		if (possibleValues.size() == 1) {
 			return possibleValues.get(0);
 		} else {
-			return -1;
+			return temporaryValue;
 		}
 	}
 
@@ -49,6 +50,14 @@ public class NumberSquare {
 			SudokuBoard.updateNeighbors(this);
 			usedSolution = true;
 		}
+	}
+
+	public void setTemporaryValue(int value) {
+		temporaryValue = value;
+	}
+
+	public void clearTemporaryValue() {
+		temporaryValue = -1;
 	}
 
 	public ArrayList<Integer> getPossibleValues() {
@@ -75,7 +84,31 @@ public class NumberSquare {
 		int x = (int) ((cords.getXCord() - 1) / 3) + 1;
 		int y = (int) ((cords.getYCord() - 1) / 3) + 1;
 
+		// System.out.println("(" + cords.getXCord() + ", " + cords.getYCord() + ") ->
+		// (" + x + ", " + y + ")");
+
 		return new Coordinates(x, y);
+	}
+
+	public boolean isSameAs(NumberSquare comparisonSquare) {
+		return this.getCords().getXCord() == comparisonSquare.getCords().getXCord() &&
+				this.getCords().getYCord() == comparisonSquare.getCords().getYCord();
+	}
+
+	public boolean isMoveLegal(int value) {
+		for (NumberSquare currentSquare : SudokuBoard.getSudokuBoard()) {
+			boolean isItself = currentSquare.equals(this);
+			// In same row, column, or subsquare
+			boolean isNeighbor = currentSquare.getCords().getXCord() == this.getCords().getXCord() ||
+					currentSquare.getCords().getYCord() == this.getCords().getYCord() ||
+					currentSquare.getSubSquare() == this.getSubSquare();
+			// Check if every other square in the same row, column, or subsquare has the
+			// same value.
+			if (!isItself && isNeighbor && currentSquare.getValue() == value) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 }

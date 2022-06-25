@@ -6,7 +6,12 @@ public class SolvingSudoku {
 
         SudokuFile sudokuFile = new SudokuFile();
         sudokuFile.importBoard();
-
         SudokuBoard.printBoard();
+
+        if (SudokuBoard.getSudokuBoard().get(0).getValue() == -1) {
+            SudokuBoard.bruteForce(SudokuBoard.getSudokuBoard().get(0));
+        } else {
+            SudokuBoard.bruteForce(SudokuBoard.getNextUnsolved(SudokuBoard.getSudokuBoard().get(0)));
+        }
     }
 }
