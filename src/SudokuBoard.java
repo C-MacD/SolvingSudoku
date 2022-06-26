@@ -3,6 +3,8 @@ import java.util.ArrayList;
 public class SudokuBoard {
 	// Ordered by coordinates
 	private static ArrayList<NumberSquare> sudokuBoard = new ArrayList<NumberSquare>();
+	// If brute force results in every square having a permanent or temporary value,
+	// every value is legal so the solution has been found.
 	private static boolean boardTempSolved = false;
 
 	/*
@@ -30,10 +32,12 @@ public class SudokuBoard {
 	 * - |---||---||---|
 	 * 
 	 */
-	public SudokuBoard() {
-		super();
-	}
 
+	/**
+	 * Getter for sudokuBoard
+	 * 
+	 * @return An ArrayList of NumberSquares
+	 */
 	public static ArrayList<NumberSquare> getSudokuBoard() {
 		return sudokuBoard;
 	}
@@ -43,14 +47,15 @@ public class SudokuBoard {
 	 * that row, column, and subsquare by removing the value from their list of
 	 * possible values.
 	 * 
-	 * @param cords
-	 * @param value
+	 * @param solvedSquare A NumberSquare with its value already set.
 	 */
 	static void updateNeighbors(NumberSquare solvedSquare) {
+		// For every square
 		for (NumberSquare currentSquare : sudokuBoard) {
 			boolean isItself = currentSquare.equals(solvedSquare);
 			boolean isNeighbor = solvedSquare.isNeighbor(currentSquare);
 
+			// Don't update itself, and only update neighbors
 			if (!isItself && isNeighbor) {
 				currentSquare.removePossibleValue(solvedSquare.getValue());
 			}
@@ -58,10 +63,23 @@ public class SudokuBoard {
 
 	}
 
+	/**
+	 * Adds a numberSquare to the board. Only for use by importing a board. Board
+	 * must be ordered by coordinates, and this does not enforce any order (yet).
+	 * 
+	 * @param numberSquare numberSquare to add on the board's end.
+	 */
 	static void insertToBoard(NumberSquare numberSquare) {
 		sudokuBoard.add(numberSquare);
 	}
 
+	/**
+	 * Finds the numberSquare at the specified coordinates. Coordinates must be
+	 * valid or null is returned.
+	 * 
+	 * @param cords Coordinates
+	 * @return numberSquare at the coordinates
+	 */
 	static NumberSquare findSquare(Coordinates cords) {
 		for (NumberSquare numberSquare : sudokuBoard) {
 			if (numberSquare.getCords().getXCord() == cords.getXCord() &&
@@ -72,6 +90,9 @@ public class SudokuBoard {
 		return null; // Should never return this
 	}
 
+	/**
+	 * Prints current board to console for debugging.
+	 */
 	static void printBoard() {
 		// For each board row
 		for (int i = 1; i <= 9; i++) {
@@ -79,21 +100,23 @@ public class SudokuBoard {
 			for (int j = 1; j <= 9; j++) {
 				NumberSquare numSquare = SudokuBoard.findSquare(new Coordinates(i, j));
 				System.out.print(numSquare.getValue());
-				// System.out.println(numSquare.getPossibleValues().toString());
 			}
 			System.out.println();
 		}
 	}
 
+	/**
+	 * Recursive function to solve a sudoku puzzle if process of elimination does
+	 * not succeed. Basically a backtracking algorithm.
+	 * 
+	 * @param numSquare The first/next unsolved numberSquare.
+	 */
 	static void bruteForce(NumberSquare numSquare) {
 		/*
-		 * If not null
-		 * - For all possibilities
-		 * - - Try first/next possibility
-		 * - - If legal move
+		 * For all possibilities
+		 * - Try first/next possibility if legal
+		 * - - Set temporary value
 		 * - - - Go to next numSquare (recursive call)
-		 * 
-		 * Return to previous numSquare
 		 * 
 		 */
 		for (int possibility : numSquare.getPossibleValues()) {
@@ -107,12 +130,22 @@ public class SudokuBoard {
 				}
 			}
 		}
+		// Clear the temporary value unless the board is solved.
 		if (!boardTempSolved) {
 			numSquare.clearTemporaryValue();
 		}
 
 	}
 
+	/**
+	 * Given a numberSquare, get the next in the list without a permanent or
+	 * temporary value.
+	 * 
+	 * @param currentSquare A numberSquare of where start looking at the following
+	 *                      ones.
+	 * @return The next unsolved numberSquare, or null if the end of the list is
+	 *         reached.
+	 */
 	static NumberSquare getNextUnsolved(NumberSquare currentSquare) {
 		for (int i = sudokuBoard.indexOf(currentSquare) + 1; i < sudokuBoard.size(); i++) {
 			if (sudokuBoard.get(i).getValue() == -1) {
@@ -124,6 +157,12 @@ public class SudokuBoard {
 		return null;
 	}
 
+	/**
+	 * Checks if the puzzle is solved.
+	 * 
+	 * @return True if every square has a permanent or temporary value, false
+	 *         otherwise.
+	 */
 	static boolean isBoardSolved() {
 		for (NumberSquare numberSquare : sudokuBoard) {
 			if (numberSquare.getValue() == -1) {

@@ -4,7 +4,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
-public class SudokuFile {
+public class SudokuFileHandler {
+	/**
+	 * Imports from a properly formatted file. Creates all necessary objects, and in
+	 * the process tries to solve the puzzle through process of elimination.
+	 * 
+	 * @param file Formatted file containing known values and X's
+	 */
 	public void importBoard(File file) {
 		try {
 			SudokuBoard.clearBoard();
@@ -14,7 +20,6 @@ public class SudokuFile {
 				// For each number square
 				for (int j = 1; j <= 9; j++) {
 					SudokuBoard.insertToBoard(new NumberSquare(i, j));
-
 				}
 			}
 
@@ -28,6 +33,7 @@ public class SudokuFile {
 					char chr = line.charAt(j - 1);
 					// TODO: better error checking
 					if (chr != 'X') {
+						// Sets the value of all given values
 						NumberSquare numSquare = SudokuBoard.findSquare(new Coordinates(i, j));
 						numSquare.setValue(Integer.parseInt(chr + ""));
 					}
@@ -42,6 +48,11 @@ public class SudokuFile {
 
 	}
 
+	/**
+	 * Writes board values (the solution) to specified file.
+	 * 
+	 * @param file
+	 */
 	public void exportBoard(File file) {
 		try {
 			FileWriter myWriter = new FileWriter(file);
@@ -50,8 +61,13 @@ public class SudokuFile {
 			for (int i = 1; i <= 9; i++) {
 				// For each number square
 				for (int j = 1; j <= 9; j++) {
+					// Find each value in order and add it to output string
 					NumberSquare numSquare = SudokuBoard.findSquare(new Coordinates(i, j));
-					output += numSquare.getValue();
+					if (numSquare.getValue() == -1) {
+						output += "X";
+					} else {
+						output += numSquare.getValue();
+					}
 				}
 				output += "\n";
 			}
@@ -63,6 +79,11 @@ public class SudokuFile {
 		}
 	}
 
+	/**
+	 * Looks in the Puzzles folder to create an empty folder with a unique name.
+	 * 
+	 * @return A folder represented as a File object.
+	 */
 	public File createSolutionFolder() {
 		// Find the next unused folder name starting at 0.
 		int i = 0;
