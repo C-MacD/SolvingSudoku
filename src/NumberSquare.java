@@ -47,8 +47,8 @@ public class NumberSquare {
 		possibleValues.add(value);
 
 		if (!usedSolution) {
-			SudokuBoard.updateNeighbors(this);
 			usedSolution = true;
+			SudokuBoard.updateNeighbors(this);
 		}
 	}
 
@@ -98,10 +98,7 @@ public class NumberSquare {
 	public boolean isMoveLegal(int value) {
 		for (NumberSquare currentSquare : SudokuBoard.getSudokuBoard()) {
 			boolean isItself = currentSquare.equals(this);
-			// In same row, column, or subsquare
-			boolean isNeighbor = currentSquare.getCords().getXCord() == this.getCords().getXCord() ||
-					currentSquare.getCords().getYCord() == this.getCords().getYCord() ||
-					currentSquare.getSubSquare() == this.getSubSquare();
+			boolean isNeighbor = isNeighbor(currentSquare);
 			// Check if every other square in the same row, column, or subsquare has the
 			// same value.
 			if (!isItself && isNeighbor && currentSquare.getValue() == value) {
@@ -109,6 +106,20 @@ public class NumberSquare {
 			}
 		}
 		return true;
+	}
+
+	/**
+	 * Checks another numberSquare to see if it is in the same row, column, or
+	 * subsquare.
+	 * 
+	 * @param comparisonSquare
+	 * @return
+	 */
+	public boolean isNeighbor(NumberSquare comparisonSquare) {
+		return comparisonSquare.getCords().getXCord() == this.getCords().getXCord() ||
+				comparisonSquare.getCords().getYCord() == this.getCords().getYCord() ||
+				(comparisonSquare.getSubSquare().getXCord() == this.getSubSquare().getXCord() &&
+						comparisonSquare.getSubSquare().getYCord() == this.getSubSquare().getYCord());
 	}
 
 }

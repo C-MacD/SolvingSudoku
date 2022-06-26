@@ -49,10 +49,7 @@ public class SudokuBoard {
 	static void updateNeighbors(NumberSquare solvedSquare) {
 		for (NumberSquare currentSquare : sudokuBoard) {
 			boolean isItself = currentSquare.equals(solvedSquare);
-			// In same row, column, or subsquare
-			boolean isNeighbor = currentSquare.getCords().getXCord() == solvedSquare.getCords().getXCord() ||
-					currentSquare.getCords().getYCord() == solvedSquare.getCords().getYCord() ||
-					currentSquare.getSubSquare() == solvedSquare.getSubSquare();
+			boolean isNeighbor = solvedSquare.isNeighbor(currentSquare);
 
 			if (!isItself && isNeighbor) {
 				currentSquare.removePossibleValue(solvedSquare.getValue());
