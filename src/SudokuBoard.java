@@ -103,7 +103,6 @@ public class SudokuBoard {
 					bruteForce(getNextUnsolved(numSquare));
 				} else {
 					boardTempSolved = true;
-					printBoard();
 					break; // Break for loop, don't try more possibilities
 				}
 			}
@@ -132,5 +131,12 @@ public class SudokuBoard {
 			}
 		}
 		return true;
+	}
+
+	/**
+	 * Delete everything in the sudoku board.
+	 */
+	static void clearBoard() {
+		sudokuBoard.clear();
 	}
 }
